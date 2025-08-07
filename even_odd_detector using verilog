@@ -1,0 +1,60 @@
+module even_odd_detector(num,is_even,is_odd);
+  input [4:0]num;
+  output is_even;
+  output is_odd;
+  assign is_even=~num[0];
+  assign is_odd=num[0];
+endmodule
+
+
+module even_odd_detector_tb;
+  reg [4:0]num;
+  wire is_even;
+  wire is_odd;
+  even_odd_detector u1(.num(num),.is_even(is_even),.is_odd(is_odd));
+  integer i;
+  initial
+    begin
+      $monitor("num=%d,even=%b,odd=%b",num,is_even,is_odd);
+      for(i=0;i<32;i=i+1)
+        begin
+          num=i;
+          #10;
+        end
+      $finish;
+    end
+endmodule
+
+
+num= 0,even=1,odd=0
+num= 1,even=0,odd=1
+num= 2,even=1,odd=0
+num= 3,even=0,odd=1
+num= 4,even=1,odd=0
+num= 5,even=0,odd=1
+num= 6,even=1,odd=0
+num= 7,even=0,odd=1
+num= 8,even=1,odd=0
+num= 9,even=0,odd=1
+num=10,even=1,odd=0
+num=11,even=0,odd=1
+num=12,even=1,odd=0
+num=13,even=0,odd=1
+num=14,even=1,odd=0
+num=15,even=0,odd=1
+num=16,even=1,odd=0
+num=17,even=0,odd=1
+num=18,even=1,odd=0
+num=19,even=0,odd=1
+num=20,even=1,odd=0
+num=21,even=0,odd=1
+num=22,even=1,odd=0
+num=23,even=0,odd=1
+num=24,even=1,odd=0
+num=25,even=0,odd=1
+num=26,even=1,odd=0
+num=27,even=0,odd=1
+num=28,even=1,odd=0
+num=29,even=0,odd=1
+num=30,even=1,odd=0
+num=31,even=0,odd=1
