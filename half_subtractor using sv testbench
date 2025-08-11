@@ -1,0 +1,80 @@
+module half_subtractor(a,b,diff,bo);
+  input a,b;
+  output diff,bo;
+  assign diff=a^b;
+  assign bo=(~a&b);
+endmodule
+interface inter;
+  logic a;
+  logic b;
+  logic diff;
+  logic bo;
+endinterface
+
+
+
+class generator;
+  logic a;
+  logic b;
+  mailbox mbx;
+  integer i;
+  task run();
+    for(i=0;i<4;i=i+1)
+      begin
+        {a,b}=i;
+        mbx.put({a,b});
+        $display("generated test cases:a=%b,b=%b",a,b);
+        #20;
+      end
+  endtask
+endclass
+class driver;
+  virtual inter vif;
+  mailbox mbx;
+  integer i;
+  task run();
+    for(i=0;i<4;i=i+1)
+      begin
+        logic [1:0]temp;
+        logic a,b;
+        mbx.get(temp);
+        a=temp[1];
+        b=temp[0];
+        vif.a=a;
+        vif.b=b;
+        #10;
+        $display("driver applied a=%b b=%b diff=%b  b=%b",a,b,vif.diff,vif.bo);
+      end
+  endtask
+endclass
+module tb;
+  inter aif();
+  half_subtractor u1(.a(aif.a),.b(aif.b),.diff(aif.diff),.bo(aif.bo));
+  generator gen;
+  driver div;
+  mailbox mbx;
+  initial
+    begin
+      gen=new();
+      div=new();
+      mbx=new();
+      gen.mbx=mbx;
+      div.mbx=mbx;
+      div.vif=aif;
+      fork
+        gen.run();
+        div.run();
+      join
+    end
+endmodule
+
+
+
+generated test cases:a=0,b=0
+# KERNEL: driver applied a=0 b=0 diff=0  b=0
+# KERNEL: generated test cases:a=0,b=1
+# KERNEL: driver applied a=0 b=1 diff=1  b=1
+# KERNEL: generated test cases:a=1,b=0
+# KERNEL: driver applied a=1 b=0 diff=1  b=0
+# KERNEL: generated test cases:a=1,b=1
+# KERNEL: driver applied a=1 b=1 diff=0  b=0
