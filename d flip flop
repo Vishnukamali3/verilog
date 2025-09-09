@@ -1,0 +1,52 @@
+module dff(d,q,clk);
+  input clk,d;
+  output reg q;
+  always@(posedge clk)
+    begin
+      if(clk)
+        q<=d;
+      else
+        q<=0;
+    end
+endmodule
+
+
+module tb;
+  reg clk,d;
+  wire q;
+  dff u1(.clk(clk),.d(d),.q(q));
+  integer i;
+  initial
+    begin 
+      forever #5 clk=~clk;
+    end
+  initial begin
+    $monitor(" time=%t clk=%b,d=%b,q=%b",$time,clk,d,q);
+    #10; clk=1;d=0;
+    #10; clk=0;d=1;
+    #10; clk=0;d=0;
+    #10; clk=1;d=1;
+    #10; clk=1;d=0;
+    #20;
+    $finish;
+  end
+endmodule
+
+time=                   0 clk=x,d=x,q=x
+# KERNEL:  time=                  10 clk=0,d=0,q=x
+# KERNEL:  time=                  15 clk=1,d=0,q=0
+# KERNEL:  time=                  20 clk=1,d=1,q=0
+# KERNEL:  time=                  25 clk=0,d=1,q=0
+# KERNEL:  time=                  30 clk=1,d=0,q=0
+# KERNEL:  time=                  35 clk=0,d=0,q=0
+# KERNEL:  time=                  40 clk=0,d=1,q=0
+# KERNEL:  time=                  45 clk=1,d=1,q=1
+# KERNEL:  time=                  50 clk=0,d=0,q=1
+# KERNEL:  time=                  55 clk=1,d=0,q=0
+# KERNEL:  time=                  60 clk=0,d=0,q=0
+# KERNEL:  time=                  65 clk=1,d=0,q=0
+
+
+
+
+
